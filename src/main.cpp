@@ -72,7 +72,7 @@ static int daysInMonth(int year,int month){static const int d[]={31,28,31,30,31,
 static void calendarScreen(){
   tm now={};bool valid=getNow(now);int year=valid?now.tm_year+1900:2026;int mon=valid?now.tm_mon+1:10;
   int sum=(mon-1)+monthShift;year+=(sum>=0?sum/12:(sum-11)/12);mon=((sum%12)+12)%12+1;
-  txt(22,70,months[mon-1]+" "+String(year),WHITE,1);
+  txt(22,70,String(months[mon-1])+" "+String(year),WHITE,1);
   button(20,107,55,37,"<");button(245,107,55,37,">");
   txt(93,116,"МЕСЯЦ",MUTED);
   for(int c=0;c<7;++c)txt(18+43*c,165,weekdayShort[c],SECOND);
