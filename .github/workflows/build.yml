@@ -1,4 +1,4 @@
-name: Build JC3248W535C diagnostic firmware
+name: Build JC3248W535C Calendar v4
 on:
   workflow_dispatch:
   push:
@@ -11,22 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install PlatformIO
-        run: pip install platformio esptool
-      - name: Build firmware
-        run: pio run -e jc3248w535c
-      - name: Prepare merged image at address 0x0
-        shell: bash
+      - run: pip install platformio 'esptool<5'
+      - run: pio run -e jc3248w535c
+      - name: Build complete flash image (offset 0x0)
         run: |
-          python -m esptool --chip esp32s3 merge_bin -o JC3248W535C_DIAG_V2_fullflash.bin --flash_mode dio --flash_freq 40m --flash_size 16MB \
+          python -m esptool --chip esp32s3 merge_bin -o JC3248W535C_CALENDAR_V4_fullflash.bin --flash_mode dio --flash_freq 40m --flash_size 16MB \
             0x0 .pio/build/jc3248w535c/bootloader.bin \
             0x8000 .pio/build/jc3248w535c/partitions.bin \
             0x10000 .pio/build/jc3248w535c/firmware.bin
       - uses: actions/upload-artifact@v4
         with:
-          name: JC3248W535C_DIAG_V2_fullflash
-          path: JC3248W535C_DIAG_V2_fullflash.bin
+          name: JC3248W535C_CALENDAR_V4_fullflash
+          path: JC3248W535C_CALENDAR_V4_fullflash.bin
+
